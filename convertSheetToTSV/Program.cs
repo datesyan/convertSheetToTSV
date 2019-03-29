@@ -25,7 +25,7 @@ namespace convertToTSV
                 bool isKeyAdd = false;
                 for (int i = 0; i < arr.Length; i++)
                 {
-                    ;
+                    
                     string[] pram = arr[i].Replace("=", "ⓔⓒⓔ").Split(new string[] { "ⓔ", Environment.NewLine }, StringSplitOptions.None);
                     switch (i)
                     {
@@ -36,14 +36,14 @@ namespace convertToTSV
                             {
                                 for (int i2 = 0; i2 < pram.Length; i2++)
                                 {
-                                    ;
                                     if (pram[i2] == "ⓒ")
                                     {
-                                        if (!str2.TrimEnd().Equals("\n") && str2 != "")
+                                        if (!str2.EndsWith(Environment.NewLine) && str2 != "")
                                             str2 += "\t";
-                                        str2 += pram[i2 - 1] + "\n";
+                                        str2 += pram[i2 - 1];
                                     }
                                 }
+                                str2 += Environment.NewLine;
                                 isKeyAdd = true;
                                 i -= 1;
                                 break;
@@ -55,27 +55,27 @@ namespace convertToTSV
                             {
                                 if (pram[i3] == "ⓒ")
                                 {
-                                    if (!str2.TrimEnd().Equals("\n"))
+                                    if (!str2.EndsWith(Environment.NewLine))
                                         str2 += "\t";
-                                    str2 += pram[i3 + 1] + "\n";
+                                    str2 += pram[i3 + 1];
                                 }
                             }
+                            str2 += Environment.NewLine;
                             break;
 
                     }
+
                 }
                 File.WriteAllText(filePath + ".tsv", str2);
                 System.Diagnostics.Process.Start(filePath + ".tsv");
+                Console.WriteLine("succeeeded");
 
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                goto labelreset;
             }
-
-            Console.Write("enter any key");
-            Console.ReadLine();
+            goto labelreset;
 
         }
     }
