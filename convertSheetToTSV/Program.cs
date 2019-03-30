@@ -79,8 +79,16 @@ namespace convertToTSV
                     }
 
                 }
-
-                Console.WriteLine("succeeeded");
+                if (fileName != "")
+                {
+                    SafeCreateDirectory("convertedSheet\\" + fileName);
+                    File.WriteAllText("convertedSheet\\" + fileName + "\\" + fileName + "." + sheetName + ".tsv", str2);
+                    Console.WriteLine("succeeeded");
+                }
+                else
+                {
+                    Console.WriteLine("invalid file");
+                }
 
             }
             catch (Exception e)
