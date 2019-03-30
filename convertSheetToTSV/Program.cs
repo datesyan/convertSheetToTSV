@@ -17,57 +17,69 @@ namespace convertToTSV
             try
             {
                 filePath = System.Console.ReadLine();
+                string fileName = "";
                 Console.WriteLine("processing...");
                 string text = File.ReadAllText(filePath);
-
-                string[] arr = text.Replace("\t", "").Replace(" ", "").Split(new string[] { "Paramdata" }, StringSplitOptions.None);
+                int index = 0;
+                string[] arr = text.Replace("\t", "").Split(new string[] { "Param data" }, StringSplitOptions.None);
+            labelnewFile:
                 string str2 = "";
+                string sheetName = "";
                 bool isKeyAdd = false;
-                for (int i = 0; i < arr.Length; i++)
+                for (int i = index; i < arr.Length; i++)
                 {
-                    
+
                     string[] pram = arr[i].Replace("=", "ⓔⓒⓔ").Split(new string[] { "ⓔ", Environment.NewLine }, StringSplitOptions.None);
-                    switch (i)
+                    for (int i1 = 0; i1 < pram.Length; i1++)
                     {
-                        case 0:
-                            continue;
-                        case 1:
-                            if (!isKeyAdd)
+                        if (index != i)
+                        {
+                            if (pram[i1] == "ⓒ")
                             {
-                                for (int i2 = 0; i2 < pram.Length; i2++)
-                                {
-                                    if (pram[i2] == "ⓒ")
-                                    {
-                                        if (!str2.EndsWith(Environment.NewLine) && str2 != "")
-                                            str2 += "\t";
-                                        str2 += pram[i2 - 1];
-                                    }
-                                }
-                                str2 += Environment.NewLine;
-                                isKeyAdd = true;
-                                i -= 1;
-                                break;
-                            }
-                            else
-                                goto default;
-                        default:
-                            for (int i3 = 0; i3 < pram.Length; i3++)
-                            {
-                                if (pram[i3] == "ⓒ")
+                                if (isKeyAdd)
                                 {
                                     if (!str2.EndsWith(Environment.NewLine))
                                         str2 += "\t";
-                                    str2 += pram[i3 + 1];
+                                    str2 += pram[i1 + 1];
+                                }
+                                else
+                                {
+                                    if (!str2.EndsWith(Environment.NewLine) && str2 != "")
+                                        str2 += "\t";
+                                    str2 += pram[i1 - 1];
                                 }
                             }
-                            str2 += Environment.NewLine;
-                            break;
+                            if (pram[i1].Contains("Sheet data"))
+                            {
+                                SafeCreateDirectory("convertedSheet\\" + fileName);
+                                File.WriteAllText("convertedSheet\\"+fileName+"\\"+fileName + "." + sheetName + ".tsv", str2);
+                                index = i;
+                                goto labelnewFile;
+                            }
+                           
+                        }
+                        else
+                        {
+                            if (pram[i1].Contains("string m_Name") && index == 0)
+                                fileName = pram[i1 + 2].Replace("\"", "").Replace(" ","");
 
+                            if (pram[i1].Contains("String name"))
+                                sheetName = pram[i1 + 2].Replace("\"","").Replace(" ", "");
+                        }
+                    }
+                    if (!isKeyAdd&&index+1==i)
+                    {
+                        str2 += Environment.NewLine;
+                        isKeyAdd = true;
+                        i -= 1;
+                    }
+                    if (index != i)
+                    {
+                        str2 += Environment.NewLine;
                     }
 
                 }
-                File.WriteAllText(filePath + ".tsv", str2);
-                System.Diagnostics.Process.Start(filePath + ".tsv");
+
                 Console.WriteLine("succeeeded");
 
             }
@@ -78,5 +90,14 @@ namespace convertToTSV
             goto labelreset;
 
         }
+        public static DirectoryInfo SafeCreateDirectory(string path)
+        {
+            if (Directory.Exists(path))
+            {
+                return null;
+            }
+            return Directory.CreateDirectory(path);
+        }
     }
+
 }
