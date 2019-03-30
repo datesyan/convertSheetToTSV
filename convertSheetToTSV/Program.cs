@@ -103,7 +103,7 @@ namespace convertToTSV
                     }
                     else
                     {
-                        Console.WriteLine("invalid file");
+                        Console.WriteLine(filePath[j]+" is invalid file");
                     }
                 }
             }
