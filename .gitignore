@@ -260,5 +260,5 @@ paket-files/
 __pycache__/
 *.pyc
 
-#except
-!\convertSheetToTSV\bin\Release\convertSheetToTSV.exe
+# except
+!bin\Release\convertSheetToTSV.exe
