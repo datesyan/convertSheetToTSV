@@ -261,4 +261,4 @@ __pycache__/
 *.pyc
 
 #except
-!\bin\Release\convertSheetToTSV.exe
+!\convertSheetToTSV\bin\Release\convertSheetToTSV.exe
